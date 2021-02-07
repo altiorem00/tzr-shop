@@ -28,18 +28,10 @@
 
       <fieldset class="form__block">
         <legend class="form__legend">Цвет</legend>
-        <ul class="colors">
-          <li class="colors__item" v-for="color in allColors" :key="color">
-            <label class="colors__label">
-              <input class="colors__radio sr-only" type="radio" name="color" :value="color" v-model="currentColor">
-              <span class="colors__value" :style="{ backgroundColor: color }">
-                  </span>
-            </label>
-          </li>
-        </ul>
+        <colors-list :colors="allColors" :currentColor.sync="currentColor"/>
       </fieldset>
 
-      <fieldset class="form__block">
+      <fieldset class="form__block" v-if="currentCategoryId === 2 || currentCategoryId === 0">
         <legend class="form__legend">Объемб в ГБ</legend>
         <ul class="check-list">
           <li class="check-list__item">
@@ -111,7 +103,8 @@
 
 <script>
 import category from '../data/category'
-import products from '@/data/products'
+import colors from '@/data/colors'
+import ColorsList from '@/components/ColorsList'
 
 export default {
   data () {
@@ -123,19 +116,13 @@ export default {
     }
   },
   props: ['priceFrom', 'priceTo', 'categoryId', 'colored'],
+  components: { ColorsList },
   computed: {
     categories () {
       return category
     },
     allColors () {
-      const allColor = []
-      products.forEach(el => {
-        el.colors.forEach(color => {
-          allColor.push(color)
-        })
-      })
-      const filteredColor = [...new Set(allColor)]
-      return filteredColor
+      return colors
     }
   },
   watch: {

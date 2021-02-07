@@ -94,5 +94,21 @@ export default [
     price: 3690,
     image: 'img/radio.jpg',
     colors: ['#FF6B00', '#73B6EA', '#FFBE15']
+  },
+  {
+    id: 13,
+    categoryId: 4,
+    title: 'Радионяня Motorola MBP16',
+    price: 3690,
+    image: 'img/radio.jpg',
+    colors: ['#FF6B00', '#73B6EA', '#8BE000']
+  },
+  {
+    id: 14,
+    categoryId: 4,
+    title: 'Радионяня Motorola MBP16',
+    price: 3690,
+    image: 'img/radio.jpg',
+    colors: ['#FF6B00', '#73B6EA', '#000']
   }
 ]
