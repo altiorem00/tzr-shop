@@ -5,7 +5,7 @@ export default [
   },
   {
     id: 2,
-    value: '#fff'
+    value: '#D2425C'
   },
   {
     id: 3,
