@@ -45,7 +45,7 @@ export default [
   {
     id: 6,
     categoryId: 3,
-    title: 'Электрический дрифт-карт Razor Crazy Cart',
+    title: 'Электрический дрифт-карт Razor Crazy cart',
     price: 39900,
     image: 'img/bicycle.jpg',
     colors: [2, 1, 6]

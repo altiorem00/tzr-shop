@@ -105,9 +105,9 @@
 </template>
 
 <script>
-import category from '../data/category'
+import category from '../../data/category'
 import colors from '@/data/colors'
-import ColorsList from '@/components/ColorsList'
+import ColorsList from '@/components/common/ColorsList'
 
 export default {
   data () {

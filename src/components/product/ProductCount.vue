@@ -1,6 +1,6 @@
 <template>
   <div class="product__counter form__counter">
-    <button type="button" aria-label="Убрать один товар" @click.prevent="deleteElem">
+    <button type="button" aria-label="Убрать один товар" @click.prevent="currentAmount--">
       <svg width="10" height="10" fill="currentColor">
         <use xlink:href="#icon-minus"></use>
       </svg>
@@ -25,14 +25,9 @@ export default {
         return this.productAmount
       },
       set (v) {
-        this.$emit('update:productAmount', v)
-      }
-    }
-  },
-  methods: {
-    deleteElem () {
-      if (this.currentAmount > 1) {
-        this.currentAmount--
+        if (v > 0) {
+          this.$emit('update:productAmount', v)
+        }
       }
     }
   }

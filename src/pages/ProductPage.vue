@@ -189,7 +189,7 @@
 <script>
 import products from '@/data/products'
 import category from '@/data/category'
-import ProductCount from '@/components/ProductCount'
+import ProductCount from '@/components/product/ProductCount'
 import numberFormat from '@/helpers/numberFormat'
 
 export default {
@@ -200,6 +200,13 @@ export default {
   },
   components: { ProductCount },
 
+  watch: {
+    '$route.params.id' () {
+      if (!this.product) {
+        this.$router.replace({ name: 'notFound' })
+      }
+    }
+  },
   methods: {
     addToCart () {
       this.$store.commit('addProductToCart', {

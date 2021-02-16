@@ -28,7 +28,7 @@
 <script>
 import numberFormat from '@/helpers/numberFormat'
 import { mapMutations } from 'vuex'
-import ProductCount from '@/components/ProductCount'
+import ProductCount from '@/components/product/ProductCount'
 export default {
   filters: { numberFormat },
   components: { ProductCount },

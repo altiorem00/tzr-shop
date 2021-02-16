@@ -11,8 +11,9 @@
     </div>
 
     <div class="content__catalog">
-      <productFilter :price-from.sync="filterPriceFrom" :price-to.sync="filterPriceTo"
-                     :category-id.sync="filterCategoryId" :colored.sync="filterColor" :countProducts.sync="countProducts"/>
+      <ProductFilter :price-from.sync="filterPriceFrom" :price-to.sync="filterPriceTo"
+                     :category-id.sync="filterCategoryId" :colored.sync="filterColor"
+                     :countProducts.sync="countProducts"/>
       <section class="catalog">
         <ProductList :products="products"/>
         <VPagination v-model="page" :count="countProducts" :per-page="productsPerPage"/>
@@ -22,15 +23,16 @@
 </template>
 <script>
 import products from '@/data/products'
-import ProductList from '@/components/ProductList'
-import VPagination from '@/components/VPagination'
-import productFilter from '@/components/productFilter'
+import ProductList from '@/components/product/ProductList'
+import VPagination from '@/components/common/VPagination'
+import ProductFilter from '@/components/product/ProductFilter'
+import axios from 'axios'
 
 export default {
   components: {
     ProductList,
     VPagination,
-    productFilter
+    ProductFilter
   },
   data () {
     return {
@@ -39,7 +41,8 @@ export default {
       filterCategoryId: 0,
       filterColor: '',
       page: 1,
-      productsPerPage: 3
+      productsPerPage: 3,
+      productsData: null
     }
   },
   computed: {
@@ -71,6 +74,24 @@ export default {
     countProducts () {
       return this.filteredProducts.length
     }
+  },
+  methods: {
+    loadProducts () {
+      function currentProductsData (data) {
+        this.productsData = data
+      }
+
+      axios.get('https://vue-study.skillbox.cc/api/products')
+        .then(function (response) {
+          console.log()
+          // console.log(item.productsData)
+          currentProductsData(response.data)
+          // this.productsData = response.data
+        })
+    }
+  },
+  created () {
+    this.loadProducts()
   }
 }
 </script>

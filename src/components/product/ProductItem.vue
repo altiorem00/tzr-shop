@@ -18,7 +18,7 @@
 
 <script>
 import colors from '@/data/colors'
-import ColorsList from '@/components/ColorsList'
+import ColorsList from '@/components/common/ColorsList'
 import goToPage from '@/helpers/goToPage'
 import numberFormat from '@/helpers/numberFormat'
 
