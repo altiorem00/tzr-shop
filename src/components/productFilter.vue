@@ -19,7 +19,7 @@
         <legend class="form__legend">Категория</legend>
         <label class="form__label form__label--select">
           <select class="form__select" type="text" name="category" v-model="currentCategoryId">
-            <option value="0">Все категории</option>
+            <option :value="0">Все категории</option>
             <option :value="name.id" v-for="name in categories" :key="name.id">{{ name.title }}</option>
 
           </select>
@@ -43,6 +43,7 @@
                   </span>
             </label>
           </li>
+
           <li class="check-list__item">
             <label class="check-list__label">
               <input class="check-list__check sr-only" type="checkbox" name="volume" value="16">
@@ -90,7 +91,9 @@
           </li>
         </ul>
       </fieldset>
-
+      <fieldset class="form__block">
+        <legend class="form__legend" style="font-size: 22px; margin-bottom: 0px;">найдено товаров: {{ countProducts }}</legend>
+      </fieldset>
       <button class="filter__submit button button--primery" type="submit">
         Применить
       </button>
@@ -115,7 +118,7 @@ export default {
       currentColor: ''
     }
   },
-  props: ['priceFrom', 'priceTo', 'categoryId', 'colored'],
+  props: ['priceFrom', 'priceTo', 'categoryId', 'colored', 'countProducts'],
   components: { ColorsList },
   computed: {
     categories () {
