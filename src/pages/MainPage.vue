@@ -15,6 +15,10 @@
                      :category-id.sync="filterCategoryId" :colored.sync="filterColor"
                      :countProducts.sync="countProducts"/>
       <section class="catalog">
+        <preloader v-if="productsLoading"/>
+        <div class="failed" v-if="productsLoadingFailed">Произошла ошибка при загрузке товаров
+          <button @click.prevent="loadProducts">Попробовать ещё раз</button>
+        </div>
         <ProductList :products="products"/>
         <VPagination v-model="page" :count="countProducts" :per-page="productsPerPage"/>
       </section>
@@ -22,17 +26,19 @@
   </main>
 </template>
 <script>
-import products from '@/data/products'
 import ProductList from '@/components/product/ProductList'
 import VPagination from '@/components/common/VPagination'
 import ProductFilter from '@/components/product/ProductFilter'
+import Preloader from '@/components/common/Preloader'
 import axios from 'axios'
+import { API_BASE_URL } from '@/config'
 
 export default {
   components: {
     ProductList,
     VPagination,
-    ProductFilter
+    ProductFilter,
+    Preloader
   },
   data () {
     return {
@@ -42,52 +48,59 @@ export default {
       filterColor: '',
       page: 1,
       productsPerPage: 3,
-      productsData: null
+      productsLoading: false,
+      productsLoadingFailed: false
     }
   },
   computed: {
-    filteredProducts () {
-      let filteredProducts = products
-
-      if (this.filterPriceFrom > 0) {
-        filteredProducts = filteredProducts.filter(product => product.price > this.filterPriceFrom)
-      }
-
-      if (this.filterPriceTo > 0) {
-        filteredProducts = filteredProducts.filter(product => product.price < this.filterPriceTo)
-      }
-
-      if (this.filterCategoryId) {
-        filteredProducts = filteredProducts.filter(product => product.categoryId === this.filterCategoryId)
-      }
-
-      if (this.filterColor) {
-        filteredProducts = filteredProducts.filter(product => product.colors.includes(this.filterColor))
-      }
-
-      return filteredProducts
+    stateData () {
+      return this.$store.state.allProducts
     },
     products () {
-      const offset = (this.page - 1) * this.productsPerPage
-      return this.filteredProducts.slice(offset, offset + this.productsPerPage)
+      return this.stateData ? this.stateData.items : []
     },
     countProducts () {
-      return this.filteredProducts.length
+      return this.stateData ? this.stateData.pagination.total : 0
     }
   },
   methods: {
     loadProducts () {
-      function currentProductsData (data) {
-        this.productsData = data
-      }
-
-      axios.get('https://vue-study.skillbox.cc/api/products')
-        .then(function (response) {
-          console.log()
-          // console.log(item.productsData)
-          currentProductsData(response.data)
-          // this.productsData = response.data
-        })
+      this.productsLoading = true
+      this.productsLoadingFailed = false
+      clearTimeout(this.loadProductsTimer)
+      this.loadProductsTimer = setTimeout(() => {
+        axios
+          .get(API_BASE_URL + 'api/products?page=1', {
+            params: {
+              page: this.page,
+              limit: this.productsPerPage,
+              categoryId: this.filterCategoryId,
+              colorId: this.filterColor,
+              minPrice: this.filterPriceFrom,
+              maxPrice: this.filterPriceTo
+            }
+          })
+          .then(response => this.$store.commit('takeProducts', response.data))
+          .catch(() => this.productsLoadingFailed = true) //eslint-disable-line
+          .then(() => this.productsLoading = false) //eslint-disable-line
+      }, 0)
+    }
+  },
+  watch: {
+    page () {
+      this.loadProducts()
+    },
+    filterPriceFrom () {
+      this.loadProducts()
+    },
+    filterPriceTo () {
+      this.loadProducts()
+    },
+    filterCategoryId () {
+      this.loadProducts()
+    },
+    filterColor () {
+      this.loadProducts()
     }
   },
   created () {
@@ -95,3 +108,13 @@ export default {
   }
 }
 </script>
+<style scoped lang="scss">
+.catalog {
+  position: relative;
+}
+
+.failed {
+  position: absolute;
+  top: 30px;
+}
+</style>

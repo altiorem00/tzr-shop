@@ -11,7 +11,7 @@
                 Артикул: {{ item.productId }}
               </span>
 
-      <ProductCount :productAmount.sync="productAmount"/>
+    <ProductCount :productAmount.sync="productAmount"/>
     <b class="product__price">
       {{ (item.amount * item.product.price) | numberFormat }} ₽
     </b>
@@ -27,8 +27,9 @@
 </template>
 <script>
 import numberFormat from '@/helpers/numberFormat'
-import { mapMutations } from 'vuex'
+import { mapActions } from 'vuex'
 import ProductCount from '@/components/product/ProductCount'
+
 export default {
   filters: { numberFormat },
   components: { ProductCount },
@@ -39,7 +40,7 @@ export default {
         return this.item.amount
       },
       set (value) {
-        this.$store.commit('updateCartProductAmount', {
+        this.$store.dispatch('updateCartProductAmount', {
           productId: this.item.productId,
           amount: value
         })
@@ -47,8 +48,11 @@ export default {
     }
   },
   methods: {
-    ...mapMutations({ deleteProduct: 'deleteCartProducts' })
-
+    ...mapActions(['deleteProductToCart']),
+    deleteProduct (id) {
+      console.log(id)
+      this.deleteProductToCart(id)
+    }
   }
 }
 </script>

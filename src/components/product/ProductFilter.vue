@@ -92,7 +92,10 @@
         </ul>
       </fieldset>
       <fieldset class="form__block">
-        <legend class="form__legend" style="font-size: 22px; margin-bottom: 0px;">найдено товаров: {{ countProducts }}</legend>
+        <legend class="form__legend" style="font-size: 22px; margin-bottom: 0px;">найдено товаров: {{
+            countProducts
+          }}
+        </legend>
       </fieldset>
       <button class="filter__submit button button--primery" type="submit">
         Применить
@@ -105,8 +108,6 @@
 </template>
 
 <script>
-import category from '../../data/category'
-import colors from '@/data/colors'
 import ColorsList from '@/components/common/ColorsList'
 
 export default {
@@ -122,10 +123,10 @@ export default {
   components: { ColorsList },
   computed: {
     categories () {
-      return category
+      return this.$store.state.categoryProducts ? this.$store.state.categoryProducts : []
     },
     allColors () {
-      return colors
+      return this.$store.state.colorsData ? this.$store.state.colorsData : []
     }
   },
   watch: {

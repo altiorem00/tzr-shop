@@ -1,6 +1,8 @@
 <template>
-
-  <main class="content container">
+  <main v-if="productLoading">
+    <preloader/>
+  </main>
+  <main class="content container" v-else>
     <div class="content__top">
       <ul class="breadcrumbs">
         <li class="breadcrumbs__item">
@@ -24,7 +26,7 @@
     <section class="item">
       <div class="item__pics pics">
         <div class="pics__wrapper">
-          <img width="570" height="570" :src="product.image" :alt="product.name">
+          <img width="570" height="570" :src="product.image.file.url" :alt="product.name">
         </div>
       </div>
 
@@ -97,25 +99,12 @@
             </fieldset>
 
             <div class="item__row">
-              <!--              <div class="form__counter">-->
-              <!--                <button type="button" aria-label="Убрать один товар">-->
-              <!--                  <svg width="12" height="12" fill="currentColor">-->
-              <!--                    <use xlink:href="#icon-minus"></use>-->
-              <!--                  </svg>-->
-              <!--                </button>-->
-
-              <!--                <input type="text" v-model.number="productAmount">-->
-
-              <!--                <button type="button" aria-label="Добавить один товар">-->
-              <!--                  <svg width="12" height="12" fill="currentColor">-->
-              <!--                    <use xlink:href="#icon-plus"></use>-->
-              <!--                  </svg>-->
-              <!--                </button>-->
-              <!--              </div>-->
               <ProductCount :productAmount.sync="productAmount"/>
-              <button class="button button--primery" type="submit">
+              <button class="button button--primery" type="submit" :disabled="productAddSending">
                 В корзину
               </button>
+              <div v-show="productAdded">Товар добавлен в корзину</div>
+              <div v-show="productAddSending">Добавляем Товар...</div>
             </div>
           </form>
         </div>
@@ -187,32 +176,47 @@
 </template>
 
 <script>
-import products from '@/data/products'
-import category from '@/data/category'
 import ProductCount from '@/components/product/ProductCount'
+import Preloader from '@/components/common/Preloader'
 import numberFormat from '@/helpers/numberFormat'
+import axios from 'axios'
+import { API_BASE_URL } from '@/config'
+import { mapActions } from 'vuex'
 
 export default {
   data () {
     return {
-      productAmount: 1
+      productAmount: 1,
+      productLoading: false,
+
+      productAdded: false,
+      productAddSending: false
     }
   },
-  components: { ProductCount },
-
-  watch: {
-    '$route.params.id' () {
-      if (!this.product) {
-        this.$router.replace({ name: 'notFound' })
-      }
-    }
+  components: {
+    ProductCount,
+    Preloader
   },
   methods: {
+    ...mapActions(['addProductToCart']),
     addToCart () {
-      this.$store.commit('addProductToCart', {
+      this.addProductToCart({
         productId: this.product.id,
         amount: this.productAmount
       })
+        .then(() => { //eslint-disable-line
+          this.productAdded = true
+          this.productAddSending = false
+        })
+    },
+    loadProduct () {
+      this.productLoading = true
+      clearTimeout(this.loadProductsTimer)
+      axios
+        .get(API_BASE_URL + 'api/products/' + this.$route.params.id)
+        .then(response => this.$store.commit('takeProduct', response.data))
+        .catch(() => this.$router.replace({ name: 'notFound' })) //eslint-disable-line
+        .then(() => this.productLoading = false) //eslint-disable-line
     }
   },
   filters: {
@@ -220,11 +224,24 @@ export default {
   },
   computed: {
     product () {
-      return products.find(product => product.id === +this.$route.params.id)
+      return this.$store.state.productData
     },
     categories () {
-      return category.find(categories => categories.id === this.product.categoryId)
+      return this.$store.state.productData.category
+    }
+  },
+  watch: {
+    '$route.params.id': {
+      handler () {
+        this.loadProduct()
+      },
+      immediate: true
     }
   }
 }
 </script>
+<style scoped>
+main {
+  min-height: 100vh;
+}
+</style>
