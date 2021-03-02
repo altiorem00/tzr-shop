@@ -118,10 +118,9 @@ import CartIndicator from '@/components/cart/CartIndicator'
 import { mapActions, mapMutations } from 'vuex'
 
 export default {
+  name: 'App',
   components: { CartIndicator },
   created () {
-    this.loadCategories()
-    this.loadColors()
     const userAccessKey = localStorage.getItem('userAccessKey')
     if (userAccessKey) {
       this.updateUserAccessKey(userAccessKey)

@@ -20,7 +20,7 @@
           <button @click.prevent="loadProducts">Попробовать ещё раз</button>
         </div>
         <ProductList :products="products"/>
-        <VPagination v-model="page" :count="countProducts" :per-page="productsPerPage"/>
+        <VPagination v-if="!productsLoading" v-model="page" :count="countProducts" :per-page="productsPerPage"/>
       </section>
     </div>
   </main>
@@ -32,6 +32,7 @@ import ProductFilter from '@/components/product/ProductFilter'
 import Preloader from '@/components/common/Preloader'
 import axios from 'axios'
 import { API_BASE_URL } from '@/config'
+import { mapActions } from 'vuex'
 
 export default {
   components: {
@@ -64,6 +65,8 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['loadCategories', 'loadColors']),
+
     loadProducts () {
       this.productsLoading = true
       this.productsLoadingFailed = false
@@ -105,6 +108,8 @@ export default {
   },
   created () {
     this.loadProducts()
+    this.loadColors()
+    this.loadCategories()
   }
 }
 </script>

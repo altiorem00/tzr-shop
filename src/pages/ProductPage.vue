@@ -103,8 +103,8 @@
               <button class="button button--primery" type="submit" :disabled="productAddSending">
                 В корзину
               </button>
-              <div v-show="productAdded">Товар добавлен в корзину</div>
-              <div v-show="productAddSending">Добавляем Товар...</div>
+              <div v-if="productAdded">Товар добавлен в корзину</div>
+              <div v-if="productAddSending">Добавляем Товар...</div>
             </div>
           </form>
         </div>

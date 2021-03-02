@@ -1,98 +1,52 @@
 <template>
-  <div id="cube-loader">
-    <div class="caption">
-      <div class="cube-loader">
-        <div class="cube loader-1"></div>
-        <div class="cube loader-2"></div>
-        <div class="cube loader-4"></div>
-        <div class="cube loader-3"></div>
-      </div>
-    </div>
+  <div class="pre-shell">
+  <svg version="1.1" id="preloader4" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+       width="140px" height="140px"
+       viewBox="0 0 200 200">
+    <g class="pre load4">
+      <path fill="#1B1A1C" d="M124.5,57L124.5,57c0,3.9-3.1,7-7,7h-36c-3.9,0-7-3.1-7-7v0c0-3.9,3.1-7,7-7h36 C121.4,50,124.5,53.1,124.5,57z"/><path fill="#1B1A1C" d="M147.7,86.9L147.7,86.9c-2.7,2.7-7.2,2.7-9.9,0l-25.5-25.5c-2.7-2.7-2.7-7.2,0-9.9l0,0 c2.7-2.7,7.2-2.7,9.9,0L147.7,77C150.5,79.8,150.5,84.2,147.7,86.9z"/>
+      <path fill="#1B1A1C" d="M143,74.5L143,74.5c3.9,0,7,3.1,7,7v36c0,3.9-3.1,7-7,7l0,0c-3.9,0-7-3.1-7-7v-36 C136,77.6,139.1,74.5,143,74.5z"/>
+      <path fill="#1B1A1C" d="M148.4,112.4L148.4,112.4c2.7,2.7,2.7,7.2,0,9.9L123,147.7c-2.7,2.7-7.2,2.7-9.9,0h0c-2.7-2.7-2.7-7.2,0-9.9 l25.5-25.5C141.3,109.6,145.7,109.6,148.4,112.4z"/>
+      <path fill="#1B1A1C" d="M125.5,143L125.5,143c0,3.9-3.1,7-7,7h-36c-3.9,0-7-3.1-7-7l0,0c0-3.9,3.1-7,7-7h36 C122.4,136,125.5,139.1,125.5,143z"/>
+      <path fill="#1B1A1C" d="M52.3,113.1L52.3,113.1c2.7-2.7,7.2-2.7,9.9,0l25.5,25.5c2.7,2.7,2.7,7.2,0,9.9h0c-2.7,2.7-7.2,2.7-9.9,0 L52.3,123C49.5,120.2,49.5,115.8,52.3,113.1z"/>
+      <path fill="#1B1A1C" d="M57,75.5L57,75.5c3.9,0,7,3.1,7,7v36c0,3.9-3.1,7-7,7h0c-3.9,0-7-3.1-7-7v-36C50,78.6,53.1,75.5,57,75.5z"/>
+      <path fill="#1B1A1C" d="M86.9,52.3L86.9,52.3c2.7,2.7,2.7,7.2,0,9.9L61.5,87.6c-2.7,2.7-7.2,2.7-9.9,0l0,0c-2.7-2.7-2.7-7.2,0-9.9 L77,52.3C79.8,49.5,84.2,49.5,86.9,52.3z"/>
+    </g>
+  </svg>
   </div>
 </template>
 <script>
 export default {}
 </script>
 <style scoped lang="scss">
-#cube-loader {
-  align-items: center;
-  display: flex;
-  height: 100%;
+@for $i from 1 through 8 {
+  .load4 path:nth-of-type(#{$i}) {
+    animation: spin_single_neg 1.8s .1s*$i cubic-bezier(0.19, 1, 0.22, 1) infinite;
+  }
+}
+
+.pre path {
+  transform-origin: center;
+  transform-box: fill-box;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+}
+.pre-shell {
   width: 100%;
-  position: absolute;
-  top: 50px;
-  & .caption {
-    margin: 0 auto;
-  }
-
-  .cube-loader {
-    width: 73px;
-    height: 73px;
-    margin: 0 auto;
-    margin-top: 49px;
-    position: relative;
-    transform: rotateZ(45deg);
-
-    & .cube {
-      position: relative;
-      transform: rotateZ(45deg);
-      width: 50%;
-      height: 50%;
-      float: left;
-      transform: scale(1.1);
-    }
-
-    & .cube:before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(52, 73, 94, 1.0);
-      animation: cube-loader 2.76s infinite linear both;
-      transform-origin: 100% 100%;
-    }
-
-    & .loader-2 {
-      transform: scale(1.1) rotateZ(90deg);
-    }
-
-    & .loader-3 {
-      transform: scale(1.1) rotateZ(180deg);
-    }
-
-    & .loader-4 {
-      transform: scale(1.1) rotateZ(270deg);
-    }
-
-    & .loader-2:before {
-      animation-delay: 0.35s;
-    }
-
-    & .loader-3:before {
-      animation-delay: 0.69s;
-    }
-
-    & .loader-4:before {
-      animation-delay: 1.04s;
-    }
+  display: flex;
+  justify-content: center;
+  height: 100%;
+  max-height: 200px;
+  svg {
+    height: 100%;
   }
 }
-
-@keyframes cube-loader {
-  0%, 10% {
-    transform: perspective(136px) rotateX(-180deg);
-    opacity: 0;
+@keyframes spin_single_neg {
+  0% {
+    transform: rotate(0deg);
   }
-  25%, 75% {
-    transform: perspective(136px) rotateX(0deg);
-    opacity: 1;
-  }
-  90%, 100% {
-    transform: perspective(136px) rotateY(180deg);
-    opacity: 0;
+  100% {
+    transform: rotate(-180deg);
   }
 }
-
 </style>
