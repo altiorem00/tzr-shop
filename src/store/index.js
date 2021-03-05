@@ -20,7 +20,7 @@ export default new Vuex.Store({
   },
   mutations: {
     updateOrderInfo (state, orderInfo) {
-      this.orderInfo = orderInfo
+      state.orderInfo = orderInfo
     },
     resetCart (state) {
       state.cartProducts = []
@@ -87,7 +87,7 @@ export default new Vuex.Store({
   actions: {
     loadOrderInfo (context, orderId) {
       return axios
-        .get(API_BASE_URL + 'api/order/' + orderId, {
+        .get(API_BASE_URL + 'api/orders/' + orderId, {
           params: {
             userAccessKey: context.state.userAccessKey
           }

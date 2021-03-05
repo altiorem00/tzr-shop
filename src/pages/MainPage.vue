@@ -11,8 +11,8 @@
     </div>
 
     <div class="content__catalog">
-      <ProductFilter :price-from.sync="filterPriceFrom" :price-to.sync="filterPriceTo"
-                     :category-id.sync="filterCategoryId" :colored.sync="filterColor"
+      <ProductFilter :price-from.sync="filters.priceFrom" :price-to.sync="filters.priceTo"
+                     :category-id.sync="filters.categoryId" :colored.sync="filters.color"
                      :countProducts.sync="countProducts"/>
       <section class="catalog">
         <preloader v-if="productsLoading"/>
@@ -43,10 +43,12 @@ export default {
   },
   data () {
     return {
-      filterPriceFrom: 0,
-      filterPriceTo: 0,
-      filterCategoryId: 0,
-      filterColor: '',
+      filters: {
+        priceFrom: 0,
+        priceTo: 0,
+        categoryId: 0,
+        color: ''
+      },
       page: 1,
       productsPerPage: 3,
       productsLoading: false,
@@ -77,10 +79,10 @@ export default {
             params: {
               page: this.page,
               limit: this.productsPerPage,
-              categoryId: this.filterCategoryId,
-              colorId: this.filterColor,
-              minPrice: this.filterPriceFrom,
-              maxPrice: this.filterPriceTo
+              categoryId: this.filters.categoryId,
+              colorId: this.filters.color,
+              minPrice: this.filters.priceFrom,
+              maxPrice: this.filters.priceTo
             }
           })
           .then(response => this.$store.commit('takeProducts', response.data))
@@ -93,21 +95,15 @@ export default {
     page () {
       this.loadProducts()
     },
-    filterPriceFrom () {
-      this.loadProducts()
-    },
-    filterPriceTo () {
-      this.loadProducts()
-    },
-    filterCategoryId () {
-      this.loadProducts()
-    },
-    filterColor () {
-      this.loadProducts()
+    filters: {
+      handler () {
+        this.loadProducts()
+      },
+      immediate: true,
+      deep: true
     }
   },
   created () {
-    this.loadProducts()
     this.loadColors()
     this.loadCategories()
   }

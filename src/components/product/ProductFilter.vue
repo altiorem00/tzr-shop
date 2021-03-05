@@ -129,20 +129,6 @@ export default {
       return this.$store.state.colorsData ? this.$store.state.colorsData : []
     }
   },
-  watch: {
-    priceFrom (value) {
-      this.currentPriceFrom = value
-    },
-    priceTo (value) {
-      this.currentPriceTo = value
-    },
-    categoryId (value) {
-      this.currentCategoryId = value
-    },
-    colored (value) {
-      this.currentColor = value
-    }
-  },
   methods: {
     submit () {
       this.$emit('update:priceFrom', this.currentPriceFrom)

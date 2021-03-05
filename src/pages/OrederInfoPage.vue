@@ -3,14 +3,14 @@
     <div class="content__top">
       <ul class="breadcrumbs">
         <li class="breadcrumbs__item">
-          <a class="breadcrumbs__link" href="index.html">
+          <router-link class="breadcrumbs__link" :to="{name: 'main'}">
             Каталог
-          </a>
+          </router-link>
         </li>
         <li class="breadcrumbs__item">
-          <a class="breadcrumbs__link" href="cart.html">
+          <router-link class="breadcrumbs__link" :to="{name: 'cart'}">
             Корзина
-          </a>
+          </router-link>
         </li>
         <li class="breadcrumbs__item">
           <a class="breadcrumbs__link">
@@ -18,27 +18,24 @@
           </a>
         </li>
       </ul>
-
       <h1 class="content__title">
-        Заказ оформлен <span>№ 23621</span>
+        Заказ оформлен <span>№ {{ this.$route.params.id }}</span>
       </h1>
     </div>
-
     <section class="cart">
       <form class="cart__form form" action="#" method="POST">
         <div class="cart__field">
           <p class="cart__message">
-            Благодарим за&nbsp;выбор нашего магазина. На&nbsp;Вашу почту придет письмо с&nbsp;деталями заказа.
-            Наши менеджеры свяжутся с&nbsp;Вами в&nbsp;течение часа для уточнения деталей доставки.
+            Благодарим за выбор нашего магазина. На Вашу почту придет письмо с деталями заказа.
+            Наши менеджеры свяжутся с Вами в течение часа для уточнения деталей доставки.
           </p>
-
           <ul class="dictionary">
             <li class="dictionary__item">
               <span class="dictionary__key">
                 Получатель
               </span>
               <span class="dictionary__value">
-                Иванова Василиса Алексеевна
+                {{ this.$store.state.orderInfo.name }}
               </span>
             </li>
             <li class="dictionary__item">
@@ -46,7 +43,7 @@
                 Адрес доставки
               </span>
               <span class="dictionary__value">
-                Москва, ул. Ленина, 21, кв. 33
+                {{ this.$store.state.orderInfo.address }}
               </span>
             </li>
             <li class="dictionary__item">
@@ -54,7 +51,7 @@
                 Телефон
               </span>
               <span class="dictionary__value">
-                8 800 989 74 84
+                {{ this.$store.state.orderInfo.phone }}
               </span>
             </li>
             <li class="dictionary__item">
@@ -62,7 +59,7 @@
                 Email
               </span>
               <span class="dictionary__value">
-                lalala@mail.ru
+                {{ this.$store.state.orderInfo.email }}
               </span>
             </li>
             <li class="dictionary__item">
@@ -75,19 +72,18 @@
             </li>
           </ul>
         </div>
-
         <div class="cart__block">
           <ul class="cart__orders">
-            <li class="cart__order" v-for="item in this.$store.state.cartProductsData" :key="item.product.id">
+            <li class="cart__order" v-for="item in this.$store.state.orderInfo.basket.items" :key="item.product.id">
               <h3>{{ item.product.title }}</h3>
-              <b>{{ item.product.price }}</b>
+              <b>{{ item.product.price | numberFormat }} x {{ item.quantity }}</b>
               <span>Артикул: {{ item.product.id }}</span>
             </li>
           </ul>
-
           <div class="cart__total">
             <p>Доставка: <b>500 ₽</b></p>
-            <p>Итого: <b>3</b> товара на сумму <b>37 970 ₽</b></p>
+            <p>Итого: <b>{{ this.$store.state.orderInfo.basket.items.length }}</b> товар на сумму
+              <b>{{ this.$store.state.orderInfo.totalPrice | numberFormat }}</b></p>
           </div>
         </div>
       </form>
@@ -95,18 +91,19 @@
   </main>
 </template>
 <script>
+import numberFormat from '@/helpers/numberFormat'
 export default {
   data () {
     return {
-      orderData: null
+      orderProducts: null
     }
   },
+  filters: { numberFormat },
   created () {
-    if ((this.$store.state.orderInfo === null) && (this.$store.state.orderInfo.id === this.$route.params.id)) {
-      this.orderData = this.$store.state.orderInfo
-    } else {
-      this.$store.dispatch('loadOrderInfo', this.$route.params.id)
+    if (this.$store.state.orderInfo !== null && this.$store.state.orderInfo.id === this.$route.params.id) {
+      return
     }
+    this.$store.dispatch('loadOrderInfo', this.$route.params.id)
   }
 }
 </script>
