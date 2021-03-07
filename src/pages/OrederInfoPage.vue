@@ -22,7 +22,7 @@
         Заказ оформлен <span>№ {{ this.$route.params.id }}</span>
       </h1>
     </div>
-    <section class="cart">
+    <section class="cart" v-if="orderInfo">
       <form class="cart__form form" action="#" method="POST">
         <div class="cart__field">
           <p class="cart__message">
@@ -35,7 +35,7 @@
                 Получатель
               </span>
               <span class="dictionary__value">
-                {{ this.$store.state.orderInfo.name }}
+                {{ orderInfo.name }}
               </span>
             </li>
             <li class="dictionary__item">
@@ -43,7 +43,7 @@
                 Адрес доставки
               </span>
               <span class="dictionary__value">
-                {{ this.$store.state.orderInfo.address }}
+                {{ orderInfo.address }}
               </span>
             </li>
             <li class="dictionary__item">
@@ -51,7 +51,7 @@
                 Телефон
               </span>
               <span class="dictionary__value">
-                {{ this.$store.state.orderInfo.phone }}
+                {{ orderInfo.phone }}
               </span>
             </li>
             <li class="dictionary__item">
@@ -59,7 +59,7 @@
                 Email
               </span>
               <span class="dictionary__value">
-                {{ this.$store.state.orderInfo.email }}
+                {{ orderInfo.email }}
               </span>
             </li>
             <li class="dictionary__item">
@@ -72,38 +72,46 @@
             </li>
           </ul>
         </div>
-        <div class="cart__block">
-          <ul class="cart__orders">
-            <li class="cart__order" v-for="item in this.$store.state.orderInfo.basket.items" :key="item.product.id">
-              <h3>{{ item.product.title }}</h3>
-              <b>{{ item.product.price | numberFormat }} x {{ item.quantity }}</b>
-              <span>Артикул: {{ item.product.id }}</span>
-            </li>
-          </ul>
-          <div class="cart__total">
-            <p>Доставка: <b>500 ₽</b></p>
-            <p>Итого: <b>{{ this.$store.state.orderInfo.basket.items.length }}</b> товар на сумму
-              <b>{{ this.$store.state.orderInfo.totalPrice | numberFormat }}</b></p>
-          </div>
-        </div>
+        <cart-orders :ordersData="cartOrdersData"/>
       </form>
     </section>
+    <h2 v-else> заказ не найден </h2>
   </main>
 </template>
 <script>
 import numberFormat from '@/helpers/numberFormat'
+import CartOrders from '@/components/cart/CartOrders'
+
 export default {
   data () {
     return {
       orderProducts: null
     }
   },
-  filters: { numberFormat },
-  created () {
-    if (this.$store.state.orderInfo !== null && this.$store.state.orderInfo.id === this.$route.params.id) {
-      return
+  components: { CartOrders },
+  computed: {
+    orderInfo () {
+      return this.$store.state.orderInfo
+    },
+    cartOrdersData () {
+      return {
+        items: this.orderInfo.basket.items,
+        count: this.orderInfo.basket.items.length,
+        totalPrice: this.orderInfo.totalPrice
+      }
     }
-    this.$store.dispatch('loadOrderInfo', this.$route.params.id)
+  },
+  filters: { numberFormat },
+  watch: {
+    '$route.params.id': {
+      handler () {
+        if (this.orderInfo !== null && this.orderInfo.id === this.$route.params.id) {
+          return
+        }
+        this.$store.dispatch('loadOrderInfo', this.$route.params.id).catch(() => this.$router.replace({ name: 'notFound' })) //eslint-disable-line
+      },
+      immediate: true
+    }
   }
 }
 </script>

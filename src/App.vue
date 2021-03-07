@@ -132,4 +132,5 @@ export default {
     ...mapMutations(['updateUserAccessKey'])
   }
 }
+
 </script>

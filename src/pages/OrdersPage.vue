@@ -91,26 +91,12 @@
             </ul>
           </div>
         </div>
-
-        <div class="cart__block">
-          <ul class="cart__orders">
-            <li class="cart__order" v-for="item in this.cartDetailProducts" :key="item.product.id">
-              <h3>{{ item.product.title }}</h3>
-              <b>{{ item.product.price | numberFormat }} ₽ x {{ item.amount }}</b>
-              <span>Артикул: {{ item.product.id }}</span>
-            </li>
-          </ul>
-          <div class="cart__total">
-            <p>Доставка: <b>500 ₽</b></p>
-            <p>Итого: <b>{{ this.cartTotalAmount }}</b> товар на сумму <b>{{ this.cartTotalPrice | numberFormat }}
-              ₽</b></p>
-          </div>
-
+        <cart-orders :ordersData="cartOrdersData">
           <button class="cart__button button button--primery" type="submit" style="height: 80px; padding: 0px 20px">
             <span v-if="!orderLoading">Оформить заказ</span>
             <preloader v-else/>
           </button>
-        </div>
+        </cart-orders>
         <div class="cart__error form__error-block" v-if="formErrorMessage">
           <h4>Заявка не отправлена!</h4>
           <p>
@@ -130,6 +116,7 @@ import { API_BASE_URL } from '@/config'
 import { mapGetters } from 'vuex'
 import numberFormat from '@/helpers/numberFormat'
 import Preloader from '@/components/common/Preloader'
+import CartOrders from '@/components/cart/CartOrders'
 
 export default {
   data () {
@@ -143,7 +130,8 @@ export default {
   components: {
     BaseFormText,
     BaseFormTextarea,
-    Preloader
+    Preloader,
+    CartOrders
   },
   filters: { numberFormat },
   methods: {
@@ -176,7 +164,14 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['cartDetailProducts', 'cartTotalPrice', 'cartTotalAmount'])
+    ...mapGetters(['cartDetailProducts', 'cartTotalPrice', 'cartTotalAmount']),
+    cartOrdersData () {
+      return {
+        items: this.cartDetailProducts,
+        count: this.cartTotalAmount,
+        totalPrice: this.cartTotalPrice
+      }
+    }
   }
 }
 </script>
