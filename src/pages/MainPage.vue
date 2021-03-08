@@ -20,7 +20,7 @@
           <button @click.prevent="loadProducts">Попробовать ещё раз</button>
         </div>
         <ProductList :products="products"/>
-        <VPagination v-if="!productsLoading" v-model="page" :count="countProducts" :per-page="productsPerPage"/>
+        <VPagination v-model="page" :count="countProducts" :per-page="productsPerPage"/>
       </section>
     </div>
   </main>

@@ -18,7 +18,6 @@
 
 <script>
 import ColorsList from '@/components/common/ColorsList'
-import goToPage from '@/helpers/goToPage'
 import numberFormat from '@/helpers/numberFormat'
 
 export default {
@@ -31,9 +30,6 @@ export default {
   components: { ColorsList },
   filters: {
     numberFormat
-  },
-  methods: {
-    goToPage
   }
 }
 </script>

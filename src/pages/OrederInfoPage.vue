@@ -83,11 +83,6 @@ import numberFormat from '@/helpers/numberFormat'
 import CartOrders from '@/components/cart/CartOrders'
 
 export default {
-  data () {
-    return {
-      orderProducts: null
-    }
-  },
   components: { CartOrders },
   computed: {
     orderInfo () {
@@ -105,10 +100,10 @@ export default {
   watch: {
     '$route.params.id': {
       handler () {
-        if (this.orderInfo !== null && this.orderInfo.id === this.$route.params.id) {
-          return
-        }
-        this.$store.dispatch('loadOrderInfo', this.$route.params.id).catch(() => this.$router.replace({ name: 'notFound' })) //eslint-disable-line
+        this.$store.dispatch('loadOrderInfo', this.$route.params.id).catch((e) => {
+          console.log(e.response.status)
+          e.response.status < 500 ? this.$router.replace({ name: 'notFound' }) : alert('ошибка ' + e.response.status + '. Попробуйте позже')
+        }) //eslint-disable-line
       },
       immediate: true
     }

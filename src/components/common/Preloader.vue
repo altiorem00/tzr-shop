@@ -37,6 +37,8 @@ export default {}
   justify-content: center;
   height: 100%;
   max-height: 200px;
+  position: absolute;
+  top: 0;
   svg {
     height: 100%;
   }
