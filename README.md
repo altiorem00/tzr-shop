@@ -1,24 +1,12 @@
-# project
+# The main functionality of the online store has been implemented.
 
-## Project setup
-```
-npm install
-```
+### Filtering goods received via API
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+### Basket
 
-### Compiles and minifies for production
-```
-npm run build
-```
+### Ordering
 
-### Lints and fixes files
-```
-npm run lint
-```
+## Used router and vuex
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+See [demo](https://altiorem00.github.io/vue/dist).
+
